@@ -1,18 +1,37 @@
 import asyncio
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher, types, F
+from aiogram.filters import CommandStart
 
-
-bot=Bot(token="TOKEN")
+#bot = Bot(token="7402414269:AAGQeoBn2zuAZfHM-p9wX4FK0_V1U8vRA6o")
 dp = Dispatcher()
 
 
-@dp.message()
+@dp.message(CommandStart())
 async def start_cmd(message: types.Message):
-    await message.answer("Hello")  
+    await message.answer(text=f"Привет {message.from_user.first_name}, напиши /help")
+    
 
 
+@dp.message()
+async def echo(message: types.Message):
+    text = message.text
+    if text in ['Привет','хай','Hello','hi','hello','Hi','Здравствуйте', 'Хай',"привет","здравстуйте"]:
+        await message.answer('И тебе привет')
+    elif text in ['Пока','пока','бай','Бай','увидимся','Пакеда','пакеда']:
+        await message.answer('До новых встреч!')
+    elif text in ['как дела','Как дела']:
+        await message.answer('Все хорошо, у тебя как')
+    elif text in ['тоже',"норм","отлично","Хорошо","хорошо","Тоже","Норм","Отлично"]:
+        await message.answer("Отлично!")
+    elif text in ['/help']:
+        await message.answer("можешь написать мне: привет как дела и пока в разных формах, и я отвечу , если напишешь что-то другое, то я отвечу тем же сообщение,если хочешь узнать свой id отправь /id")
+    elif text in ['/id']:
+        await message.answer(f'твой ID : {message.from_user.id}')
+    else:
+        await message.answer(message.text)
+  
 
 async def main():
-    dp.start_polling(bot)
-    
+    await dp.start_polling(bot)
+
 asyncio.run(main())
